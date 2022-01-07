@@ -1,5 +1,5 @@
 import Cliente from "../core/Cliente";
-import { deleteIcon, editIcon } from "./Icones";
+import { deleteIcon, editIcon } from "./Icons";
 
 interface TableProps {
   clientes: Cliente[],
