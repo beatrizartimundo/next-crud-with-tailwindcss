@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Botao from "../components/Button";
+import Button from "../components/Button";
 import Form from "../components/Form";
 import Layout from "../components/Layout";
 import Table from "../components/Table";
@@ -13,22 +13,30 @@ const clientes = [
   new Cliente('Joao', 18, '5'),
 ]
 
-function clienteSelecionado(cliente: Cliente) {
-  console.log(cliente.nome)
-};
-
-function clienteExcluido(cliente: Cliente) {
-  console.log(cliente.nome)
-};
-
-function salvarCliente(cliente:Cliente) {
-  console.log(cliente)
-}
-
-
 export default function Home() {
-
   const [visivel, setVisivel] = useState<'table' | "form">('table');
+  const [cliente, setCliente] = useState<Cliente>(Cliente.vazio());
+
+  function clienteSelecionado(cliente: Cliente) {
+    console.log(cliente.nome)
+    setCliente(cliente)
+    setVisivel('form')
+  };
+
+  function clienteExcluido(cliente: Cliente) {
+    console.log(cliente.nome)
+  };
+
+  function salvarCliente(cliente: Cliente) {
+    console.log(cliente)
+    setVisivel('table')
+  }
+  function novoCliente() {
+    console.log(cliente,'novo cliente')
+    setCliente(Cliente.vazio());
+    setVisivel('form');
+  }
+
   return (
     <div className={`
       flex h-screen justify-center items-center 
@@ -39,18 +47,24 @@ export default function Home() {
         {visivel === 'table' ? (
           <>
             <div className="flex justify-end">
-              <Botao cor="green" className="mb-4" onClick={() => setVisivel('form')}>Novo Cliente</Botao>
+              <Button
+                cor="green"
+                className="mb-4"
+                onClick={() => novoCliente()}
+              >
+                Novo Cliente
+              </Button>
             </div>
 
             <Table
               clientes={clientes}
               clienteSelecionado={clienteSelecionado}
               clienteExcluido={clienteExcluido}
-            ></Table>
+            />
           </>
         ) : (
 
-          <Form cliente={clientes[0]}
+          <Form cliente={cliente}
             canceled={() => setVisivel('table')}
             clientChange={salvarCliente}
           />
