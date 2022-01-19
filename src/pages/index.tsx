@@ -7,47 +7,23 @@ import Layout from "../components/Layout";
 import Table from "../components/Table";
 import Cliente from "../core/Cliente";
 import ClienteRepositorio from "../core/ClienteRepositorio";
+import useClientes from "../hooks/useClientes";
 
 
 
 export default function Home() {
-  const repo: ClienteRepositorio = new ColecaoCliente()
 
-  const [visivel, setVisivel] = useState<'table' | "form">('table');
-  const [cliente, setCliente] = useState<Cliente>(Cliente.vazio());
-  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const { 
+    selecionarCliente,
+    novoCliente,
+    excluirCliente,
+    cliente,
+    salvarCliente,
+    clientes,
+    tabelaVisivel,
+    exibirTabela,
+   } = useClientes()
 
-  useEffect(obterTodos,[])
-
-  function obterTodos() {
-    repo.obterTodos().then(clientes => {
-      setClientes(clientes)
-      setVisivel('table')
-    })
-  }
-
-  function clienteSelecionado(cliente: Cliente) {
-    console.log('selecionado')
-    setCliente(cliente)
-    setVisivel('form')
-  };
-
-  async function clienteExcluido(cliente: Cliente) {
-    console.log('excluido')
-    await repo.excluir(cliente)
-    obterTodos()
-  };
-
-  async function salvarCliente(cliente: Cliente) {
-    await repo.salvar(cliente)
-    obterTodos()
-  }
-
-  function novoCliente() {
-    console.log(cliente,'novo cliente')
-    setCliente(Cliente.vazio());
-    setVisivel('form');
-  }
 
   return (
     <div className={`
@@ -56,7 +32,7 @@ export default function Home() {
       text-white
       `}>
       <Layout title="Cadastro simples">
-        {visivel === 'table' ? (
+        {tabelaVisivel  ? (
           <>
             <div className="flex justify-end">
               <Button
@@ -70,14 +46,14 @@ export default function Home() {
 
             <Table
               clientes={clientes}
-              clienteSelecionado={clienteSelecionado}
-              clienteExcluido={clienteExcluido}
+              clienteSelecionado={selecionarCliente}
+              clienteExcluido={excluirCliente}
             />
           </>
         ) : (
 
           <Form cliente={cliente}
-            canceled={() => setVisivel('table')}
+            canceled={() => exibirTabela}
             clientChange={salvarCliente}
           />
         )}
