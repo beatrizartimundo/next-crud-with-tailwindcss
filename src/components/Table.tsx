@@ -3,8 +3,8 @@ import { deleteIcon, editIcon } from "./Icons";
 
 interface TableProps {
   clientes: Cliente[],
-  clienteSelecionado?: (cliente:Cliente) => void,
-  clienteExcluido?: (cliente:Cliente) => void,
+  clienteSelecionado?: (cliente: Cliente) => void,
+  clienteExcluido?: (cliente: Cliente) => void,
 }
 
 export default function Table(props: TableProps) {
@@ -39,32 +39,31 @@ export default function Table(props: TableProps) {
     return (
       <td className="flex justify-center">
         {props.clienteSelecionado ?
-        <button 
-          className={`
+          <button
+            className={`
           flex justify-center items-center 
           text-green-600 rounded-full p-2 m-1
           hover:bg-purple-50
           `}
-          onClick={() => props.clienteSelecionado?.(cliente)}
-        >
-          {editIcon}
-        </button>
-        :false  
-      }
-        {props.clienteExcluido ?
-        <button 
-          className={`
+            onClick={() => props.clienteSelecionado?.(cliente)}
+          >
+            {editIcon}
+          </button>
+      : false}
+        {props.clienteExcluido ? 
+          <button
+            className={`
           flex justify-center items-center 
           text-red-500 rounded-full p-2 m-1
           hover:bg-purple-50
           `}
-          onClick={() => props.clienteSelecionado?.(cliente)}
-        >
-          {deleteIcon}
-        </button>
-        : false
-      }
-        
+            onClick={() => props.clienteExcluido?.(cliente)}
+          >
+            {deleteIcon}
+          </button>
+          : false
+        }
+
       </td>
     )
   }

@@ -1,36 +1,48 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
+import ColecaoCliente from "../backend/db/ColecaoCliente";
 import Button from "../components/Button";
 import Form from "../components/Form";
 import Layout from "../components/Layout";
 import Table from "../components/Table";
 import Cliente from "../core/Cliente";
+import ClienteRepositorio from "../core/ClienteRepositorio";
 
-const clientes = [
-  new Cliente('Ana', 34, '1'),
-  new Cliente('Pedro', 45, '2'),
-  new Cliente('Jose', 25, '3'),
-  new Cliente('Maria', 36, '4'),
-  new Cliente('Joao', 18, '5'),
-]
+
 
 export default function Home() {
+  const repo: ClienteRepositorio = new ColecaoCliente()
+
   const [visivel, setVisivel] = useState<'table' | "form">('table');
   const [cliente, setCliente] = useState<Cliente>(Cliente.vazio());
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+
+  useEffect(obterTodos,[])
+
+  function obterTodos() {
+    repo.obterTodos().then(clientes => {
+      setClientes(clientes)
+      setVisivel('table')
+    })
+  }
 
   function clienteSelecionado(cliente: Cliente) {
-    console.log(cliente.nome)
+    console.log('selecionado')
     setCliente(cliente)
     setVisivel('form')
   };
 
-  function clienteExcluido(cliente: Cliente) {
-    console.log(cliente.nome)
+  async function clienteExcluido(cliente: Cliente) {
+    console.log('excluido')
+    await repo.excluir(cliente)
+    obterTodos()
   };
 
-  function salvarCliente(cliente: Cliente) {
-    console.log(cliente)
-    setVisivel('table')
+  async function salvarCliente(cliente: Cliente) {
+    await repo.salvar(cliente)
+    obterTodos()
   }
+
   function novoCliente() {
     console.log(cliente,'novo cliente')
     setCliente(Cliente.vazio());
